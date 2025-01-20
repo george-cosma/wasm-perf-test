@@ -118,18 +118,18 @@ pub fn primes(max_num: u64) -> u64 {
 }
 ```
 
-All of the interpreters were used using their default settings. This means, that
-for wasmtime, the wasm code was compiled down to machine code and ran using JIT.
-I've tried to make it use the `pulley`, wasmtime's built-in interpreter, instead
-of `cranelift` or `winch`, the JIT compiler and regular compiler, but I have
-failed to do so.
+All of the interpreters were used using their default settings. This means that,
+for wasmtime, the WASM bytecode was compiled down to machine code and ran using
+JIT. I've tried to make it use the `pulley` runtime, wasmtime's built-in
+interpreter, instead of `cranelift` or `winch`, the machine-code compilers.
+However, I failed in this endeavour.
 
-For this reason, the more important comparison is between `wasm-interpreter` and
-`tinywasm`. The ~ x3 performance difference are yet to be explained, but here
-are some potential candidates:
+The more important comparison is between `wasm-interpreter` and `tinywasm`. The
+~ x3 performance difference is yet to be explained, but here are some potential
+candidates:
 - Stack efficiency - a lot of computation time is spent on `Stack::push` and
   `Stack::pop`
-- Sidetable transfer efficiency
+- Sidetable transfer efficiency (`do_sidetable_transfer`) 
 - Using parsing functions inside execution e.g. `::parse_u32`
 
 
