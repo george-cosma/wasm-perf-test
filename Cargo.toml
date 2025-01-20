@@ -1,0 +1,29 @@
+[package]
+name = "wasm-perf-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+criterion = "0.5.1"
+wasm-interpreter = { git = "https://github.com/DLR-FT/wasm-interpreter/", version = "0.1.0" }
+wasmtime = {version = "28.0.1"}
+wat = "1.223.0"
+log="0.4.22"
+tinywasm = "0.8.0"
+
+[[bench]]
+name = "wasm"
+harness = false
+
+
+[lib]
+name = "wasm_perf_test"
+path = "src/lib.rs"
+
+[[bin]]
+name = "wasm_perf_test_bin"
+path = "src/bin.rs"
+
+[profile.profiling]
+inherits = "release"
+debug = true
