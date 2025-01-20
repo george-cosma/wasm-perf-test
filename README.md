@@ -90,3 +90,46 @@ Found 12 outliers among 100 measurements (12.00%)
 | 1000       | 20.254 ms        | 6.9719 ms | 397.98 µs      |
 
 
+## How?
+
+The WASM code used for working out these test can be found in `/src/lib.rs/`. In
+short, we count how many prime numbers there are between 0 and `num_primes`,
+each number being tested by checking divisibility for each number up to the
+tested number. Here is the rust-equivelent of it:
+
+```rs
+pub fn primes(max_num: u64) -> u64 {
+    let mut result = 0;
+    for num in 0..=max_num {
+        let mut prime = true;
+        for k in 2..num {
+            if num % k == 0 {
+                prime = false;
+                break;
+            }
+        }
+
+        if prime {
+            result += 1;
+        }
+    }
+
+    return result;
+}
+```
+
+All of the interpreters were used using their default settings. This means, that
+for wasmtime, the wasm code was compiled down to machine code and ran using JIT.
+I've tried to make it use the `pulley`, wasmtime's built-in interpreter, instead
+of `cranelift` or `winch`, the JIT compiler and regular compiler, but I have
+failed to do so.
+
+For this reason, the more important comparison is between `wasm-interpreter` and
+`tinywasm`. The ~ x3 performance difference are yet to be explained, but here
+are some potential candidates:
+- Stack efficiency - a lot of computation time is spent on `Stack::push` and
+  `Stack::pop`
+- Sidetable transfer efficiency
+- Using parsing functions inside execution e.g. `::parse_u32`
+
+
